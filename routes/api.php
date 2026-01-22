@@ -12,6 +12,7 @@ use App\Http\Controllers\Siswa\PresensiController as SiswaPresensiController;
 use App\Http\Controllers\Siswa\ProfilController;
 use Laravel\Sanctum\Http\Controllers\CsrfCookieController;
 
+
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout']);
 Route::get('/sanctum/csrf-cookie', [CsrfCookieController::class, 'show']);

@@ -11,35 +11,30 @@ use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
-    // Login manual
-  public function login(Request $request)
-{
-    $request->validate([
-        'login' => 'required|string',
-        'password' => 'required|string',
-    ]);
+    public function login(Request $request)
+    {
+        $request->validate([
+            'login' => 'required|string',
+            'password' => 'required|string',
+        ]);
 
-    $user = User::where('email', $request->login)
-        ->orWhere('nidn', $request->login)
-        ->orWhere('nim', $request->login)
-        ->first();
+        $user = User::where('email', $request->login)
+            ->orWhere('nidn', $request->login)
+            ->orWhere('nim', $request->login)
+            ->first();
 
-    if (!$user || !Hash::check($request->password, $user->password)) {
-        return response()->json(['message' => 'Login atau password salah'], 422);
+        if (!$user || !Hash::check($request->password, $user->password)) {
+            return response()->json(['message' => 'Login atau password salah'], 422);
+        }
+        $token = $user->createToken('api-token')->plainTextToken;
+
+        return response()->json([
+            'message' => 'Login berhasil',
+            'user' => new UserResource($user),
+            'token' => $token
+        ]);
     }
 
-    // Buat token API
-    $token = $user->createToken('api-token')->plainTextToken;
-
-    return response()->json([
-        'message' => 'Login berhasil',
-        'user' => new UserResource($user),
-        'token' => $token
-    ]);
-}
-
-
-    // Logout manual
     public function logout(Request $request)
     {
         Auth::logout();
@@ -48,7 +43,6 @@ class AuthController extends Controller
         ]);
     }
 
-    // User yang sedang login
     public function me(Request $request)
     {
         $user = $request->user();

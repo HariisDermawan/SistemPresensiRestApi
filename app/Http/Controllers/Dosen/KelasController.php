@@ -13,7 +13,7 @@ class KelasController extends Controller
      */
     public function index(Request $request)
     {
-        $dosen = $request->user()->dosen; // ambil model Dosen dari user login
+        $dosen = $request->user()->dosen; 
         $kelas = $dosen ? $dosen->kelas : collect();
 
         return response()->json([
@@ -90,8 +90,6 @@ class KelasController extends Controller
         if (!$dosen) {
             return response()->json(['message'=>'Dosen tidak ditemukan'], 404);
         }
-
-        // Lepas kelas lama dan pasang kelas baru
         $dosen->kelas()->detach($id);
         $dosen->kelas()->attach($request->kelas_id);
 
