@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\DosenController as AdminDosenController;
 use App\Http\Controllers\Admin\KelasController as AdminKelasController;
 use App\Http\Controllers\Dosen\KelasController as DosenKelasController;
 use App\Http\Controllers\Dosen\PresensiController;
+use App\Http\Controllers\Siswa\PresensiController as SiswaPresensiController;
 use Laravel\Sanctum\Http\Controllers\CsrfCookieController;
 
 Route::post('/login', [AuthController::class, 'login']);
@@ -28,6 +29,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::apiResource('dosen', AdminDosenController::class);
         Route::apiResource('kelas', AdminKelasController::class);
         Route::apiResource('presensi', PresensiController::class);
+        Route::apiResource('presensi-siswa', SiswaPresensiController::class);
         Route::prefix('dosen')->group(function () {
             Route::get('{dosen_id}/kelas', [DosenKelasController::class, 'index']);
             Route::post('{dosen_id}/kelas', [DosenKelasController::class, 'attach']);
@@ -45,5 +47,13 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('presensi', [PresensiController::class, 'store']);
         Route::put('presensi/{id}', [PresensiController::class, 'update']);
         Route::delete('presensi/{id}', [PresensiController::class, 'destroy']);
+    });
+
+    Route::middleware('auth:sanctum')->prefix('siswa')->group(function () {
+        Route::get('presensi', [SiswaPresensiController::class, 'index']);       // semua presensi siswa
+        Route::get('presensi/{id}', [SiswaPresensiController::class, 'show']);   // detail presensi
+        Route::post('presensi', [SiswaPresensiController::class, 'store']);      // siswa absen
+        Route::put('presensi/{id}', [SiswaPresensiController::class, 'update']); // update presensi
+        Route::delete('presensi/{id}', [SiswaPresensiController::class, 'destroy']); // hapus presensi
     });
 });
