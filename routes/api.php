@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\KelasController as AdminKelasController;
 use App\Http\Controllers\Dosen\KelasController as DosenKelasController;
 use App\Http\Controllers\Dosen\PresensiController;
 use App\Http\Controllers\Siswa\PresensiController as SiswaPresensiController;
+use App\Http\Controllers\Siswa\ProfilController;
 use Laravel\Sanctum\Http\Controllers\CsrfCookieController;
 
 Route::post('/login', [AuthController::class, 'login']);
@@ -22,6 +23,15 @@ Route::middleware('auth:sanctum')->group(function () {
             'id' => $user->id,
             'email' => $user->email,
             'username' => $user->username ?? $user->nim ?? $user->nidn
+        ]);
+    });
+    Route::get('/me/role', function (Request $request) {
+        $user = $request->user();
+
+        return response()->json([
+            'message' => 'Role user login',
+            'roles' => $user->getRoleNames(),
+            'permissions' => $user->getAllPermissions()->pluck('name')
         ]);
     });
     Route::prefix('admin')->group(function () {
@@ -50,10 +60,13 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     Route::middleware('auth:sanctum')->prefix('siswa')->group(function () {
-        Route::get('presensi', [SiswaPresensiController::class, 'index']);       // semua presensi siswa
-        Route::get('presensi/{id}', [SiswaPresensiController::class, 'show']);   // detail presensi
-        Route::post('presensi', [SiswaPresensiController::class, 'store']);      // siswa absen
-        Route::put('presensi/{id}', [SiswaPresensiController::class, 'update']); // update presensi
-        Route::delete('presensi/{id}', [SiswaPresensiController::class, 'destroy']); // hapus presensi
+        Route::get('presensi', [SiswaPresensiController::class, 'index']);
+        Route::get('presensi/{id}', [SiswaPresensiController::class, 'show']);
+        Route::post('presensi', [SiswaPresensiController::class, 'store']);
+        Route::put('presensi/{id}', [SiswaPresensiController::class, 'update']);
+        Route::delete('presensi/{id}', [SiswaPresensiController::class, 'destroy']);
+        Route::get('profile/{id}', [ProfilController::class, 'show']);
+        Route::put('profile', [ProfilController::class, 'update']);
+        Route::delete('profile', [ProfilController::class, 'destroy']);
     });
 });

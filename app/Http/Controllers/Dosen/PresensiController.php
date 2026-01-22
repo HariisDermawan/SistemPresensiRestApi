@@ -39,23 +39,17 @@ class PresensiController extends Controller
         if (!$dosen) {
             return response()->json(['message' => 'Dosen tidak ditemukan'], 404);
         }
-
-        // Validasi input
         $request->validate([
             'kelas_id' => 'required|integer|exists:kelas,id',
-            'siswa_id' => 'required|integer|exists:siswas,id',  // sesuai tabel siswas
+            'siswa_id' => 'required|integer|exists:siswas,id',
             'status'   => 'required|in:hadir,izin,sakit,alfa',
             'tanggal'  => 'required|date',
         ]);
-
-        // Pastikan dosen memang mengampu kelas ini
         if (!$dosen->kelas()->where('kelas.id', $request->kelas_id)->exists()) {
             return response()->json([
                 'message' => 'Dosen tidak mengampu kelas ini'
             ], 403);
         }
-
-        // Create presensi
         $presensi = Presensi::create([
             'kelas_id' => $request->kelas_id,
             'siswa_id' => $request->siswa_id,
@@ -64,7 +58,6 @@ class PresensiController extends Controller
             'tanggal'  => $request->tanggal,
         ]);
 
-        // Hide created_at & updated_at
         return response()->json([
             'message' => 'Presensi berhasil dibuat',
             'data' => $presensi->makeHidden(['created_at', 'updated_at'])
