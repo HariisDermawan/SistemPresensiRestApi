@@ -15,11 +15,15 @@ class Presensi extends Model
     ];
 
 
-    public function siswa(){
-        return $this->belongsTo(Siswa::class);
+    public function kelas() {
+        return $this->belongsTo(Kelas::class, 'kelas_id');
     }
 
-    public function dosen(){
-        return $this->belongsTo(Dosen::class);
+    public function siswa() {
+        return $this->belongsTo(Siswa::class, 'siswa_id');
+    }
+
+    public function dosen() {
+        return $this->belongsTo(Dosen::class, 'dosen_id');
     }
 }

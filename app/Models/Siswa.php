@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Siswa extends Model
 {
+    protected $table = 'siswas'; 
     protected $fillable = [
         'user_id',
         'nim',
@@ -25,4 +26,6 @@ class Siswa extends Model
     public function presensis(){
         return $this->hasMany(Presensi::class);
     }
+
+    
 }

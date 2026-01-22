@@ -23,10 +23,10 @@ class Dosen extends Model
     public function kelas()
     {
         return $this->belongsToMany(
-            \App\Models\Kelas::class,  // Model Kelas
-            'dosen_kelas',             // Pivot table
-            'dosen_id',                // FK ke Dosen
-            'kelas_id'                 // FK ke Kelas
+            Kelas::class,  
+            'dosen_kelas',             
+            'dosen_id',                
+            'kelas_id'                 
         );
     }
 
